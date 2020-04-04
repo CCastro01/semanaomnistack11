@@ -2,9 +2,11 @@ const connection = require('../database/connection');
 
 module.exports = {
     async create(request, response){
-        const { id } = request.body;
+        const { senha } = request.body;
+        const { email } = request.body;
         const ong = await connection('ongs')
-        .where('id', id)
+        .where('senha', senha) 
+        .where('email', email)
         .select('name')
         .first();
 

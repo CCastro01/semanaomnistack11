@@ -9,14 +9,20 @@ module.exports = {
     },
 
     async create(request, response){
-        const {name, email, whatsapp, city, uf} = request.body;
+        const {name, email, whatsapp, city, uf, senha} = request.body;
         const id = crypto.randomBytes(4).toString('HEX'); //gera 4 bytes de caracteres aleatórios e são convertidos em string
         data = request.body;                              //do tipo hexadecimal
     
         await connection('ongs').insert({ //await faz com que o async espere ele ser executado para terminar o código
-            id, name, email, whatsapp, city, uf,
+            id, 
+            name, 
+            email, 
+            whatsapp, 
+            city, 
+            uf, 
+            senha
         });
     
-        return response.json({ id });
+        return response.json({ id }); // devolvendo o id para o usuário ver (essa funcionalidade será retirada)
     }
 };
