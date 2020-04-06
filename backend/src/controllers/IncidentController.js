@@ -27,12 +27,14 @@ module.exports = {
     async create(request, response){
         const { title, description, value } = request.body;
         const ong_id = request.headers.authorization;
+        const ong_email = request.headers.authorization2;
+        const ong_senha = request.headers.authorization3;
 
-       const [id] = await connection('incidents').insert({
-            title, description, value, ong_id,
+       const [id, email, senha] = await connection('incidents').insert({
+            title, description, value, ong_id, ong_email, ong_senha
         }); 
 
-        return response.json( {id} );
+        return response.json( {id, email, senha} );
     },
 
     async delete(request, response){
@@ -43,7 +45,7 @@ module.exports = {
             .select('ong_id')
             .first();
 
-            if(incident.ong_id != ong_id){
+            if(incident.ong_id !== ong_id){
                 return response.status(401).json({ error: 'Operação não permitida.' })
             }
 

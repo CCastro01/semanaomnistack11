@@ -3,34 +3,36 @@ import { Link, useHistory} from 'react-router-dom';
 import { FiPower, FiTrash2 } from 'react-icons/fi';
 import logoImg from '../../assets/logo.svg';
 import api from '../../services/api';
-
 import './style.css'
 
 export default function Profile(){
-    const [incidents, setIncidents] = useState([]);
-
     const history = useHistory();
-
     const ongName = localStorage.getItem('ongName');
+
+
     const ongId = localStorage.getItem('ongId');
+    const ongEmail = localStorage.getItem('ongEmail');
+    const ongSenha = localStorage.getItem('ongSenha');
 
+
+    const [incidents, setIncidents] = useState([]);
     
+    
+    ////////SETANDO OS INCIDENTS QUANDO A PÁGINA FOR INICIADA////////
+    useEffect( 
 
-    useEffect(() => {
-        api.get('profile',{
-            headers: {
-                Authorization: ongId,
-            }
-        }).then(response => {
-            setIncidents(response.data);
-        })
-    }, [ongId]);
+        () => { api.get('profile',{  headers: {Authorization:ongEmail, Authorization2:ongSenha}  }) 
+              .then(response => {setIncidents(response.data); })
+            }, [ongEmail, ongSenha] // NESSE ARRAY DE DEPENDENCIAS, toda vez que o ongId mudar, a função será executada
+            
+            );
 
+    ////////DELETAR////////
     async function handleDeleteincident(id){
         try {
             await api.delete(`incidents/${id}`, {
                 headers: {
-                    Authorization: ongId,
+                    Authorization: ongId, 
                 }
             });
 
@@ -40,12 +42,16 @@ export default function Profile(){
         }
     }
 
+    ////////LOGOUT////////
     function handleLogout(){
         localStorage.clear(); //limpa todo o localStorage
         history.push('/'); 
     }
 
+    ////////INTERFACE////////
     return(
+
+        ///////PÁGINA DE CASOS/////////
         <div className = "profile-container">
             <header>
                 <img src={logoImg} alt="Be the Hero"/>
@@ -56,6 +62,8 @@ export default function Profile(){
                 </button>
             </header>
 
+
+        {/* /////////TABELAS DE CASOS CADASTRADOS///////////// */}
             <h1>Casos cadastrados</h1>
 
             <ul>
